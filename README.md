@@ -45,6 +45,72 @@ aegis-ai/
 
 ---
 
+## 🏛 System Architecture
+
+AegisAI is built with a decoupled architecture designed for high availability, consulting-grade data analysis, and advanced visual dashboards.
+
+```mermaid
+graph TD
+    subgraph Frontend [Client - Next.js 14 Web Application]
+        UI["Interactive Dashboard (React)"]
+        Map["GIS Mapping (Leaflet.js)"]
+        Charts["Analytics Panels (Recharts)"]
+        FB["Client-Side Fallback Engine"]
+    end
+
+    subgraph Backend [Server - FastAPI Planning Core]
+        API["FastAPI App Server"]
+        RE["Resource Allocation Engine"]
+        RPE["Risk Profiling Engine"]
+        Gemini["Gemini AI Service"]
+        PDF["ReportLab PDF Generator"]
+    end
+
+    subgraph AI [External Services]
+        GoogleGemini["Google Gemini API"]
+    end
+
+    UI -->|1. Submit Incident Parameters| API
+    UI -->|Render Coordinates| Map
+    UI -->|Render Comparatives| Charts
+    
+    API -->|Compute Risks| RPE
+    API -->|Allocate Supplies| RE
+    API -->|Contextual Prompting| Gemini
+    API -->|Generate Document| PDF
+    
+    Gemini -->|Generate Executive Brief| GoogleGemini
+    
+    PDF -->|2. Stream McKinsey-style PDF| UI
+    
+    UI -.->|If Backend Offline| FB
+```
+
+### 🛠 Tech Stack & Key Components
+
+*   **Frontend Client**:
+    *   **Framework**: Next.js 14 App Router with TypeScript.
+    *   **Visualizations**: Recharts for comparative analytics; Leaflet.js for interactive mapping layouts inspired by **Palantir Gotham**.
+    *   **Aesthetics**: Glassmorphism, animations (Framer Motion), and dark-mode CSS variables for an ultra-premium feel.
+*   **FastAPI Backend**:
+    *   **Core**: Python FastAPI with Pydantic for validation and CORS middleware.
+    *   **LLM Orchestration**: Gemini API client utilizing dynamic context prompts to generate structured strategic briefs.
+    *   **PDF Generation**: ReportLab PDF library designed to generate consulting briefs adhering to **McKinsey Executive Analytics** visual standards.
+*   **Algorithmic Engines**:
+    *   **Resource Allocation Engine (`resources.py`)**: Computes personnel, food kits, shelter capacities, and medical team numbers based on logarithmic population scaling and incident types.
+    *   **Composite Risk Profiling Engine (`risk.py`)**: Calculates 0-100 risk indexes considering severity scales, baseline hazards, and mitigating budget variables.
+
+### 🌟 Architectural Strengths for Recruiters
+
+1.  **Dual-Execution Resilience (Offline Mode)**:
+    If the FastAPI server is offline or the Gemini API hits rate limits, the client application gracefully transitions to local fallback algorithms. The frontend mimics the backend risk and resource logic locally, guaranteeing 100% operational readiness.
+2.  **Consulting-Grade Document Compilation**:
+    The PDF report utilizes custom canvas templates in ReportLab to handle running headers, signature blocks, custom leading calculations, and dynamic multi-page numbering flows (*"Page X of Y"*).
+3.  **Modern Decoupled Structure**:
+    Clean separation of concerns with typing definitions shared across the frontend components and unified environment variable management (`GEMINI_API_KEY`).
+
+---
+
 ## 🚀 Running the Application
 
 ### 1. Start the Python Backend
